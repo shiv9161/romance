@@ -173,6 +173,7 @@ button {
   justify-content: center;
   gap: 10px;
   min-width: 160px;
+  position: relative;
 }
 
 #yesBtn {
@@ -180,7 +181,7 @@ button {
   color: white;
   position: relative;
   overflow: hidden;
-  z-index: 1;
+  z-index: 2;
 }
 
 #yesBtn:hover {
@@ -213,6 +214,7 @@ button {
   color: #555;
   position: absolute;
   transition: all 0.2s ease;
+  z-index: 3; /* Increased z-index to make sure it's above the yes button */
 }
 
 .questionBox {
@@ -400,11 +402,6 @@ button {
   </div>
   
   <div class="questionBox" id="questionBox">Waiting for your answer...</div>
-  
-  <!-- <div class="email-section">
-    <button type="button" id="sendEmailBtn" class="email-btn"><i class="fas fa-envelope"></i> Send me an email</button>
-    <p id="emailStatus" class="email-status"></p>
-  </div> -->
 </div>
 
 <!-- Celebration message -->
@@ -486,8 +483,8 @@ noBtn.addEventListener("mouseover", () => {
   const btnRect = noBtn.getBoundingClientRect();
   
   // Calculate random position within container
-  const maxX = containerRect.width - btnRect.width;
-  const maxY = containerRect.height - btnRect.height;
+  const maxX = containerRect.width - btnRect.width - 10;
+  const maxY = containerRect.height - btnRect.height - 10;
   
   const randomX = Math.random() * maxX;
   const randomY = Math.random() * maxY;
@@ -496,7 +493,7 @@ noBtn.addEventListener("mouseover", () => {
   noBtn.style.left = `${randomX}px`;
   noBtn.style.top = `${randomY}px`;
   
-  // Add a slight rotation for fun
+  // Add a slight rotation for fun (but no scaling)
   noBtn.style.transform = `rotate(${Math.random() * 10 - 5}deg)`;
 });
 
@@ -507,11 +504,7 @@ noBtn.addEventListener("click", () => {
     setTimeout(() => questionBox.classList.remove("pulse"), 500);
     index++;
     
-    // Make button smaller each click
-    const currentScale = 1 - (index * 0.02);
-    noBtn.style.transform = `scale(${currentScale > 0.7 ? currentScale : 0.7})`;
-    
-    // Change background color gradually
+    // Change background color gradually but keep size same
     const redValue = Math.min(100 + (index * 3), 255);
     noBtn.style.background = `linear-gradient(135deg, rgb(${redValue}, ${150 - index}, ${150 - index}), rgb(${redValue - 30}, 120, 120))`;
   }
@@ -619,31 +612,6 @@ function addFloatingHearts() {
 
 // Initialize floating hearts
 window.addEventListener('load', addFloatingHearts);
-
-// Send email button
-document.getElementById('sendEmailBtn').addEventListener('click', async function() {
-  const btn = this;
-  const status = document.getElementById('emailStatus');
-  btn.disabled = true;
-  status.textContent = 'Sending...';
-  status.className = 'email-status';
-  
-  try {
-    const formData = new FormData();
-    formData.append('send_email', '1');
-    const res = await fetch('/api/send-email', {
-      method: 'POST',
-      body: formData
-    });
-    const data = await res.json();
-    status.textContent = data.message;
-    status.className = 'email-status ' + (data.success ? 'success' : 'error');
-  } catch (err) {
-    status.textContent = 'Failed to send. Make sure PHP and SMTP are configured.';
-    status.className = 'email-status error';
-  }
-  btn.disabled = false;
-});
 </script>
 
 </body>
