@@ -25,7 +25,7 @@ export default async function handler(req, res) {
 
   const fromEmail = process.env.SMTP_FROM || 'samaelgaming9161@gmail.com';
   const fromName = process.env.SMTP_FROM_NAME || 'Valentine Surprise';
-  const toEmail = process.env.SMTP_TO || 'abhishekkumar.11801521@gmail.com';
+  const toEmail = process.env.SMTP_TO || 'shivduttkumar9161@gmail.com';
 
   try {
     const transporter = nodemailer.createTransport(config);
